@@ -1,6 +1,6 @@
-from PySide6.QtWidgets import QMainWindow, QWidget, QGridLayout
+from PySide6.QtWidgets import QMainWindow, QWidget, QGridLayout, QLabel
 from PySide6.QtGui import QIcon, QPixmap
-from view.clickable_label_class import ClickableLabel
+from view.clickable_label import ClickableLabel
 
 
 class UIChessboard(QMainWindow):
@@ -22,7 +22,6 @@ class UIChessboard(QMainWindow):
         self.grid_layout.setSpacing(0)
 
         self.create_ui()
-        self.initialize_labels_with_picture()
 
     def create_ui(self):
         rows = 8
@@ -32,7 +31,7 @@ class UIChessboard(QMainWindow):
         for row in range(rows):
             row_labels = []
             for col in range(cols):
-                label = ClickableLabel()
+                label = QLabel()
                 label.resize(100, 100)
                 if (row + col) % 2 == 0:
                     label.setStyleSheet("background-color: gray; border: 1px solid black;")
@@ -46,15 +45,3 @@ class UIChessboard(QMainWindow):
                 row_labels.append(label)
                 UIChessboard.labels.append(label)
 
-    def initialize_labels_with_picture(self):
-        for label in self.labels:
-            label.setMinimumSize(100, 100)
-            label.setScaledContents(True)
-            square_name = label.objectName()
-            from src.utils.helpers import get_piece_name_for_square
-            piece_name = get_piece_name_for_square(square_name)
-
-            if piece_name is not None:
-                pixmap = QPixmap(f"C:\\Users\\simon\\Desktop\\ChessProject\\src\\assets\\{piece_name}.png")
-                pixmap = pixmap.scaled(100, 100)
-                label.setPixmap(pixmap)
