@@ -44,11 +44,11 @@ class CommonMovements:
 
         new_alpha, new_numb = alpha, numb
 
-        for _ in range(7):
+        for _ in range(8):
             new_alpha = chr(ord(new_alpha) + alpha_step)
             new_numb += numb_step
 
-            target_char = chessboard.save_chars_and_position.get((new_alpha + str(new_numb)))
+            target_char = chessboard.save_chars_and_positions.get((new_alpha + str(new_numb)))
 
             if target_char is not None:
                 chess_piece.possible_moves_without_knowing_board.append((new_alpha, new_numb))
