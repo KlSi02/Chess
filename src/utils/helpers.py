@@ -52,6 +52,6 @@ class CommonMovements:
 
             if target_char is not None:
                 chess_piece.possible_moves_without_knowing_board.append((new_alpha, new_numb))
-                break
+                return
             else:
                 chess_piece.possible_moves_without_knowing_board.append((new_alpha, new_numb))
