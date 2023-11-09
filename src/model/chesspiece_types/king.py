@@ -7,8 +7,8 @@ class King(ChessPiece):
         super().__init__(team)
 
     def possible_movements(self, chessboard):
-        position = self.find_position_of_current_char(chessboard)
-        alpha, numb = position
+        self.find_position_of_current_char(chessboard)
+        alpha, numb = self.position
         numb = int(numb)
 
         self.possible_moves_without_knowing_board = [
