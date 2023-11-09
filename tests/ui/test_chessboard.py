@@ -1,11 +1,12 @@
-import pytest
 import sys
+import pytest
 
 sys.path.append("C:\\Users\\simon\\Desktop\\ChessProject")
-from src.gui.ui_chessboard.chessboard import Chessboard
+from src.view.chessboard import Chessboard
 
-import pytest
+
 from PyQt5.QtWidgets import QApplication
+
 
 @pytest.fixture
 def app():
@@ -20,7 +21,3 @@ def test_chessboard_creation(app):
     assert test_board is not None
     assert test_board.windowTitle() == "Chessboard"
     assert len(test_board.labels) == 64
-
-
-
-
