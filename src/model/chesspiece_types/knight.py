@@ -7,7 +7,7 @@ class Knight(ChessPiece):
         super().__init__(team)
 
     def possible_movements(self, chessboard):
-        self.position = self.find_position_of_current_char(chessboard)
+        self.find_position_of_current_char(chessboard)
         alpha, numb = self.position
         numb = int(numb)
 
