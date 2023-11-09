@@ -3,7 +3,7 @@ from PySide6.QtGui import QIcon, QPixmap
 from view.clickable_label_class import ClickableLabel
 
 
-class Chessboard(QMainWindow):
+class UIChessboard(QMainWindow):
     labels = []
 
     def __init__(self):
@@ -44,7 +44,7 @@ class Chessboard(QMainWindow):
 
                 self.grid_layout.addWidget(label, row, col)
                 row_labels.append(label)
-                Chessboard.labels.append(label)
+                UIChessboard.labels.append(label)
 
     def initialize_labels_with_picture(self):
         for label in self.labels:
