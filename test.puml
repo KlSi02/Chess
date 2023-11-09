@@ -1,0 +1,183 @@
+@startuml
+
+package model {
+
+    package base-player {
+
+        class Player {
+        team: String
+        captured_chars: List<Character>
+        lost: Boolean
+        actual_king_position: String
+        pawn_promotion: Boolean
+        alive_chars: Dict
+        sets_check: Dict
+        sets_checkmate: Boolean
+        threatened_fields: Dict
+        moved_chars: Dict
+        is_rochade_possible: Boolean
+        check_position_of_king()
+    }
+
+        abstract class ChessPiece {
+        position: String
+        team: String
+        possible_moves_on_current_board: List
+        possible_moves_without_knowing_board: List
+        piece_id: String
+        find_position_of_current_char()
+        abstract possible_movements()
+}
+
+    }
+
+
+        class Chessboard {
+
+        save_chars_and_pos: Dict<ChessPiece>
+        save_all_steps: Dict
+
+
+}
+    package chesspiece_types {
+
+        class Rook {
+            possible_movements()
+
+        }
+
+        class Queen {
+            possible_movements()
+        }
+
+        class Bishop {
+            possible_movements()
+        }
+
+        class Pawn {
+            first_turn: Boolean
+            check_dash_movement()
+            possible_movements()
+        }
+
+        class King {
+            possible_movements()
+        }
+
+        class Knight {
+            possible_movements()
+        }
+
+
+
+    }
+}
+
+    package controller {
+
+        class GameController {
+            PlayerController: Object
+            setup()
+            run()
+            end()
+    }
+
+        class ChessboardController {
+            Chessboard: Object
+            UiChessboard: Object
+            current_player: String
+            make_move()
+        }
+
+
+        class PlayerController {
+            team: String
+            Player: Object
+            ChessboardController: Object
+            game_over()
+            check_alive_chars()
+            get_threatened_fields()
+            update_threatened_fields()
+            pawn_promotion()
+            rochade()
+        }
+
+        class UiController {
+            UiChessboard: Object
+
+        }
+
+        class ChessPieceController {
+            ChessPiece: Object
+            update_possible_moves()
+        }
+
+
+    }
+
+package utils {
+    enum PieceTeam {
+        WHITE
+        BLACK
+    }
+
+    abstract class CommonMovements {
+        check_and_append_moves()
+    }
+}
+
+package view {
+    class UiChessboard {
+        setWindowTitle: String
+        QIcon: String
+        setGeometry: Int
+        grid_layout: QGridLayout
+        labels: List
+        create_ui()
+        initialize_labels_with_picture()
+    }
+
+    class ClickableLabel {
+        setAcceptDrops: Boolean
+        drag_start_position: String
+        original_pixmap: String
+        mousePressEvent()
+        mouseMoveEvent()
+        dragEnterEvent()
+        dropEvent()
+    }
+}
+
+ChessPiece <-- Chessboard
+Chessboard <-- ChessboardController
+UiController <-- ChessboardController
+ChessPiece <-- Player
+Player <-- PlayerController
+ChessboardController <-- PlayerController
+ChessPieceController <-- PlayerController
+PlayerController <-- GameController
+Rook <-- ChessPiece
+Rook <-- PieceTeam
+Rook <-- CommonMovements
+
+Queen <-- ChessPiece
+Queen <-- PieceTeam
+Queen <-- CommonMovements
+
+Bishop <-- ChessPiece
+Bishop <-- PieceTeam
+Bishop <-- CommonMovements
+
+Pawn <-- ChessPiece
+Pawn <-- PieceTeam
+
+King <-- ChessPiece
+King <-- PieceTeam
+
+Knight <-- ChessPiece
+Knight <-- PieceTeam
+
+ClickableLabel <-- UiChessboard
+UiChessboard <-- ChessboardController
+
+@enduml
