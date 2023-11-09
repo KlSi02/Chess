@@ -11,19 +11,19 @@ class Pawn(ChessPiece):
 
     def check_dash_movement(self, chessboard, alpha, numb):
 
-        new_alpha = chr(ord(alpha + 1))
+        new_alpha = chr(ord(alpha) + 1)
         new_numb = numb + 1
         check_position_right = new_alpha + str(new_numb)
 
-        new_alpha = chr(ord(alpha) - 1)
-        new_numb = numb + 1
-        check_position_left = new_alpha + str(new_numb)
+        new_alpha1 = chr(ord(alpha) - 1)
+        new_numb1 = numb + 1
+        check_position_left = new_alpha1 + str(new_numb1)
 
         possible_movements = [check_position_right, check_position_left]
 
         for dash in possible_movements:
             if dash not in chessboard.save_chars_and_positions.keys():
-                pass
+                return False
 
             target_char = chessboard.save_chars_and_positions.get(dash)
 
@@ -32,11 +32,12 @@ class Pawn(ChessPiece):
                         (target_char.startswith("black") and self.team == PieceTeam.WHITE):
                     alpha, numb = dash
                     self.possible_moves_without_knowing_board.append((alpha, numb))
-
+            else:
+                return False
         return True
 
     def possible_movements(self, chessboard):
-        self.position = self.find_position_of_current_char(chessboard)
+        self.find_position_of_current_char(chessboard)
         alpha, numb = self.position
         numb = int(numb)
 
