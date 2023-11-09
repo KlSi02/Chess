@@ -18,8 +18,7 @@ class ChessPiece(ABC):
         return None
 
     def find_position_of_current_char(self, chessboard):
-        piece_id = self.piece_id
-        self.position = self.find_position_of_char_by_id(piece_id, chessboard)
+        self.position = self.find_position_of_char_by_id(self.piece_id, chessboard)
 
     @abstractmethod
     def possible_movements(self, chessboard):
