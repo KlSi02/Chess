@@ -48,7 +48,7 @@ class MoveExecutor(PlayerSwitchObserver):
         :param new_pos: Destination position of the piece.
         :return: False if the move is invalid, True otherwise.
         """
-        if not (old_pos and new_pos) or new_pos not in self.chessboard.board_state:
+        if not (old_pos and new_pos) or new_pos not in self.chessboard.board_state.keys():
             return False
 
         target_piece = self.chessboard.board_state.get(old_pos)
