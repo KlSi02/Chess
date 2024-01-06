@@ -1,10 +1,10 @@
 import sys
-from PySide6.QtWidgets import QApplication
-from view.chessboard import UIChessboard
-
+from src.model.chessboard import Chessboard
+from src.controller.controller import Controller
+from PyQt6.QtWidgets import QApplication
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
-    window = UIChessboard()
-    window.show()
-    sys.exit(app.exec())
+    model = Chessboard()
+    controller = Controller(model)
+    app.exec()

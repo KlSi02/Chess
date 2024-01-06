@@ -17,11 +17,11 @@ white_pawn2 = Pawn(PieceTeam.WHITE)
 
 def test_possible_movements(setup_rook):
     chessboard = Chessboard()
-    chessboard.save_chars_and_positions["E5"] = setup_rook
-    del chessboard.save_chars_and_positions["E7"]
-    chessboard.save_chars_and_positions["E8"] = white_pawn1
-    del chessboard.save_chars_and_positions["E2"]
-    chessboard.save_chars_and_positions["E1"] = white_pawn2
+    chessboard.board_state["E5"] = setup_rook
+    del chessboard.board_state["E7"]
+    chessboard.board_state["E8"] = white_pawn1
+    del chessboard.board_state["E2"]
+    chessboard.board_state["E1"] = white_pawn2
 
     possible_moves = setup_rook.possible_movements(chessboard)
     assert possible_moves == [('F', 5),

@@ -12,7 +12,7 @@ def king():
 
 def test_possible_movements(king):
     chessboard = Chessboard()
-    chessboard.save_chars_and_positions["E5"] = king
+    chessboard.board_state["E5"] = king
 
     possible_moves = king.possible_movements(chessboard)
     assert possible_moves == [('E', 6), ('F', 6), ('F', 5), ('F', 4), ('E', 4), ('D', 4), ('D', 5), ('D', 6)]

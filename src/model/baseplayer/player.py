@@ -1,21 +1,30 @@
+from src.model.chesspiece_types.pawn import Pawn
+
 
 class Player:
 
     def __init__(self, team):
 
         self.team = team
-        self.captured_chars = []
-        self.lost = False
-        self.pawn_promotion = False
-        self.alive_chars = {}
-        self.set_checkmate = False
+        self.captured_pieces = []
+        self.alive_pieces = []
         self.set_check = {}
-        self.threatened_fields = {}
-        self.moved_chars = {}
-        self.actual_king_position = None
-        self.is_rochade_possible = False
+        self.in_check = False
+        self.in_checkmate = False
+        self.coverage_areas = {}
+        self.king_position = None
 
-    def check_position_of_king(self):
-        for square, char in self.alive_chars.items():
-            if char == "white_king":
-                self.actual_king_position = square
+    def get_alive_pieces(self, chessboard):
+        for pos, piece in chessboard.board_state.items():
+            if piece and piece.team == self.team:
+                self.alive_pieces.append(piece)
+
+    def reset(self):
+        self.captured_pieces.clear()
+        self.alive_pieces.clear()
+        self.set_check.clear()
+        self.in_check = False
+        self.in_checkmate = False
+        self.coverage_areas.clear()
+        self.king_position = None
+

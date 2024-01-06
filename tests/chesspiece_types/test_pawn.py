@@ -17,9 +17,9 @@ def test_pawn_initialization(pawn):
 
 def test_check_dash_movement(pawn):
     chessboard = Chessboard()
-    chessboard.save_chars_and_positions["B3"] = "black"
-    chessboard.save_chars_and_positions["C3"] = "black"
-    chessboard.save_chars_and_positions["A2"] = pawn
+    chessboard.board_state["B3"] = "black"
+    chessboard.board_state["C3"] = "black"
+    chessboard.board_state["A2"] = pawn
 
     possible_moves = pawn.check_dash_movement(chessboard, "A", 2)
     assert ("B", "3") in possible_moves
@@ -27,7 +27,7 @@ def test_check_dash_movement(pawn):
 
 def test_possible_movements(pawn):
     chessboard = Chessboard()
-    chessboard.save_chars_and_positions["A2"] = pawn
+    chessboard.board_state["A2"] = pawn
 
     possible_moves = pawn.possible_movements(chessboard)
 

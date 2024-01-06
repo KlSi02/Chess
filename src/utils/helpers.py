@@ -1,4 +1,5 @@
 from enum import Enum
+from src.model.chesspiece_types.pawn import Pawn
 
 
 def get_piece_name_for_square(square_name):
@@ -28,7 +29,6 @@ def get_piece_name_for_square(square_name):
                 return piece_names.get(square_name, "")
         else:
             print(square_name)
-            raise ValueError
 
     return None
 
@@ -48,10 +48,83 @@ class CommonMovements:
             new_alpha = chr(ord(new_alpha) + alpha_step)
             new_numb += numb_step
 
-            target_char = chessboard.save_chars_and_positions.get((new_alpha + str(new_numb)))
+            target_char = chessboard.board_state.get((new_alpha + str(new_numb)))
 
-            if target_char is not None:
+            if target_char:
                 chess_piece.possible_moves_without_knowing_board.append((new_alpha, new_numb))
                 return
             else:
                 chess_piece.possible_moves_without_knowing_board.append((new_alpha, new_numb))
+
+
+def get_key_by_value(dictionary, search_value):
+    for key, value in dictionary.items():
+        if value == search_value:
+            return key
+    return None
+
+
+def opponent_threatened_fields(chessboard, opponent):
+    print(opponent.alive_pieces)
+    for piece in opponent.alive_pieces:
+        if isinstance(piece, Pawn):
+            piece.possible_movements(chessboard)
+        else:
+            list_of_moves = piece.possible_movements(chessboard)
+            if list_of_moves:
+                for column, row in list_of_moves:
+                    print(column, row)
+                    update_possible_moves(chessboard, column, row, piece)
+
+        opponent.coverage_areas[piece] = piece.possible_moves
+
+
+def update_possible_moves(chessboard, column, row, piece):
+    """
+    Updates the possible moves for a chess piece based on its position and the state of the board.
+
+    :param chessboard:
+    :param column: The letter of the position ('A' to 'H').
+    :param row: The number of the position (1 to 8).
+    :param piece: The chess piece whose possible moves are to be updated.
+     """
+
+    checked_position = (column + str(row))
+    if checked_position not in chessboard.board_state.keys():
+        return
+
+    target_piece = chessboard.board_state.get(checked_position)
+
+    if target_piece is None or target_piece.team != piece.team:
+        piece.possible_moves.add(checked_position)
+
+
+def give_player_threatened_fields(chessboard, current_player, other_player):
+    for piece in current_player.alive_pieces:
+        if piece:
+            if isinstance(piece, Pawn):
+                piece.possible_movements(chessboard)
+            else:
+                list_of_moves = piece.possible_movements(chessboard)
+
+                for alpha, numb in list_of_moves:
+                    update_possible_moves(chessboard, alpha, numb, piece)
+
+            current_player.coverage_areas[piece] = piece.possible_moves
+
+    for piece in other_player.alive_pieces:
+        if piece:
+            if isinstance(piece, Pawn):
+                piece.possible_movements(chessboard)
+            else:
+                list_of_moves = piece.possible_movements(chessboard)
+
+                for alpha, numb in list_of_moves:
+                    update_possible_moves(chessboard, alpha, numb, piece)
+
+            other_player.coverage_areas[piece] = piece.possible_moves
+
+
+class PlayerSwitchObserver:
+    def on_player_switch(self, new_attacker, new_defender):
+        raise NotImplementedError

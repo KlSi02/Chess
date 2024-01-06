@@ -24,7 +24,7 @@ def test_find_position_of_char_by_id(chess_piece):
         "B1": chess_piece,
         "C1": None
     }
-    result = chess_piece.find_position_of_char_by_id(chess_piece.piece_id, chessboard)
+    result = chess_piece.find_position_of_piece_by_id(chess_piece.piece_id, chessboard)
     assert result == "B1"
 
 
@@ -35,6 +35,6 @@ def test_find_position_of_current_char(chess_piece):
         "B1": chess_piece,
         "C1": None
     }
-    chess_piece.find_position_of_char_by_id = MagicMock(return_value="B1")
-    chess_piece.find_position_of_current_char(chessboard)
+    chess_piece.find_position_of_piece_by_id = MagicMock(return_value="B1")
+    chess_piece.find_position_of_current_piece(chessboard)
     assert chess_piece.position == "B1"

@@ -19,13 +19,13 @@ white_pawn4 = Pawn(PieceTeam.WHITE)
 
 def test_possible_movements(setup_queen):
     chessboard = Chessboard()
-    chessboard.save_chars_and_positions["E5"] = setup_queen
-    chessboard.save_chars_and_positions["A5"] = white_pawn3
-    chessboard.save_chars_and_positions["H5"] = white_pawn4
-    del chessboard.save_chars_and_positions["E7"]
-    chessboard.save_chars_and_positions["E8"] = white_pawn1
-    del chessboard.save_chars_and_positions["E2"]
-    chessboard.save_chars_and_positions["E1"] = white_pawn2
+    chessboard.board_state["E5"] = setup_queen
+    chessboard.board_state["A5"] = white_pawn3
+    chessboard.board_state["H5"] = white_pawn4
+    del chessboard.board_state["E7"]
+    chessboard.board_state["E8"] = white_pawn1
+    del chessboard.board_state["E2"]
+    chessboard.board_state["E1"] = white_pawn2
 
     possible_moves = setup_queen.possible_movements(chessboard)
     assert possible_moves == [('F', 6),
