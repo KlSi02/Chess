@@ -53,17 +53,11 @@ class MoveExecutor(PlayerSwitchObserver):
 
         target_piece = self.chessboard.board_state.get(old_pos)
 
-        if target_piece is None:
-            return
-
         captured_piece = self.chessboard.board_state.get(new_pos)
 
         if captured_piece:
-            if captured_piece in self.defender.alive_pieces:
-                self.defender.captured_pieces.append(captured_piece)
-                self.defender.alive_pieces.remove(captured_piece)
-            else:
-                return
+            self.defender.captured_pieces.append(captured_piece)
+            self.defender.alive_pieces.remove(captured_piece)
 
         self.chessboard.board_state[new_pos] = target_piece
         target_piece.position = new_pos
