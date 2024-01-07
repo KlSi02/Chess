@@ -1,9 +1,7 @@
-from PyQt6.QtGui import QPixmap
-
 from src.utils.helpers import get_key_by_value, PlayerSwitchObserver
-from chess_logic.check_handler.check_resolver import CheckResolver
+from controller.check_handler.check_resolver import CheckResolver
 from PyQt6.QtCore import QObject, pyqtSignal
-from src.chess_logic.check_handler.move_validator_king import MoveValidatorKing
+from controller.check_handler.move_validator_king import MoveValidatorKing
 
 
 class CheckHandler(QObject, PlayerSwitchObserver):

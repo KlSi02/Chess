@@ -1,14 +1,10 @@
-import pytest
-from src.model.chessboard import Chessboard
 from src.model.baseplayer.player import Player
-from src.utils.helpers import PieceTeam
 from src.utils.testing_methods_check_handler import update_check_status_and_positions
 from src.model.chesspiece_types.rook import Rook
 from src.model.chessboard import Chessboard
 from src.model.chesspiece_types.king import King
 from src.utils.helpers import PieceTeam
-from src.chess_logic.check_handler.check_resolver import CheckResolver
-from src.chess_logic.check_handler.check_handler import CheckHandler
+from controller.check_handler.check_handler import CheckHandler
 
 
 def test_check_if_char_sets_check():

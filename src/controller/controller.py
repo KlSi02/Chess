@@ -1,15 +1,12 @@
-from PyQt6 import QtSvg
-from PyQt6.QtCore import Qt
-from PyQt6.QtGui import QPixmap, QColor, QPainter
-from PyQt6.QtSvg import QSvgRenderer
+from PyQt6.QtGui import QColor
 
 from src.model.chesspiece_types.pawn import Pawn
 from src.model.baseplayer.player import Player
 from src.utils.helpers import PieceTeam
-from src.chess_logic.move_validator.move_validator import MoveValidator
-from src.chess_logic.move_executor.move_executor import MoveExecutor
-from chess_logic.check_handler.check_handler import CheckHandler
-from src.chess_logic.move_executor.special_rules_handler import get_rooks
+from controller.move_validator import MoveValidator
+from controller.move_executor.move_executor import MoveExecutor
+from controller.check_handler.check_handler import CheckHandler
+from controller.move_executor.special_rules_handler import get_rooks
 from src.utils.helpers import give_player_threatened_fields
 from src.model.chesspiece_types.king import King
 from src.view.chessboard import UIChessboard

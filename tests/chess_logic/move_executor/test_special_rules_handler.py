@@ -7,14 +7,12 @@ from src.utils.helpers import PieceTeam
 from src.model.chessboard import Chessboard
 from src.view.chessboard import UIChessboard
 from src.model.baseplayer.player import Player
-from src.chess_logic.move_executor.special_rules_handler import SpecialRulesHandler, get_promotion_choice, promote_pawn
+from controller.move_executor.special_rules_handler import SpecialRulesHandler, get_promotion_choice, promote_pawn
 from src.utils.testing_methods_special_rules_handler import setup_new_piece, update_piece, check_pawn_promotion, \
-    is_castling_possible, update_pixmap
+    is_castling_possible
 import pytest
-import sys
 from PyQt6.QtGui import QPixmap
-from PyQt6.QtWidgets import QLabel, QApplication
-from unittest.mock import MagicMock, Mock, patch, create_autospec
+from unittest.mock import MagicMock, Mock, patch
 
 
 def mock_input(prompt):

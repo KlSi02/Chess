@@ -2,10 +2,9 @@ import pytest
 from src.model.chessboard import Chessboard
 from src.model.chesspiece_types.king import King
 from src.model.chesspiece_types.rook import Rook
-from src.model.chesspiece_types.bishop import Bishop
 from src.model.baseplayer.player import Player
 from src.utils.helpers import PieceTeam
-from src.chess_logic.move_validator.move_validator import MoveValidator
+from controller.move_validator import MoveValidator
 
 
 @pytest.fixture

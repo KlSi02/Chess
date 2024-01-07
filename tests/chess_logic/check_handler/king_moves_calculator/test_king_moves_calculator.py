@@ -7,7 +7,7 @@ from src.model.chesspiece_types.queen import Queen
 from src.model.chesspiece_types.pawn import Pawn
 from src.model.chesspiece_types.bishop import Bishop
 from src.utils.helpers import PieceTeam
-from chess_logic.check_handler.move_validator_king import is_double_check, only_king_can_move, filter_only_safe_moves, \
+from controller.check_handler import is_double_check, only_king_can_move, filter_only_safe_moves, \
     filter_moves_excluding_danger_line, filter_attacking_piece, update_possible_moves_of_king
 
 

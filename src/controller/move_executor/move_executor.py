@@ -2,7 +2,7 @@ from src.model.chesspiece_types.pawn import Pawn
 from src.model.chesspiece_types.king import King
 from src.model.chesspiece_types.rook import Rook
 from src.utils.helpers import PlayerSwitchObserver
-from src.chess_logic.move_executor.special_rules_handler import SpecialRulesHandler, check_en_passant
+from controller.move_executor.special_rules_handler import SpecialRulesHandler, check_en_passant
 
 
 class MoveExecutor(PlayerSwitchObserver):
