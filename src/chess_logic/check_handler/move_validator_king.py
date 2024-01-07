@@ -156,7 +156,6 @@ class MoveValidatorKing(PlayerSwitchObserver):
         """
         check_handler.double_check = is_double_check(attackers_check_moves)
         if check_handler.double_check:
-            check_handler.double_check = True
             self.only_king_can_move()
             self.filter_attacking_piece(king, attackers_check_moves)
         else:
