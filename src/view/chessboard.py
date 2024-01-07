@@ -117,6 +117,8 @@ class UIChessboard(QtWidgets.QMainWindow):
 
         # Erstelle das UI neu
         self.create_ui()
+        self.adjustSize()
+        self.update()
 
     def resizeEvent(self, event):
         super().resizeEvent(event)
