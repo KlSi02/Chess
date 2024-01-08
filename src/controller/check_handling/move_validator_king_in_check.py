@@ -3,7 +3,7 @@ from src.model.chesspiece_types.rook import Rook
 from src.model.chesspiece_types.king import King
 from src.model.chesspiece_types.bishop import Bishop
 from src.model.chesspiece_types.queen import Queen
-from src.utils.helpers import opponent_threatened_fields, update_possible_moves, get_key_by_value, PlayerSwitchObserver
+from src.utils.helpers import update_possible_moves, get_key_by_value, PlayerSwitchObserver
 
 
 def is_double_check(attackers_check_moves):

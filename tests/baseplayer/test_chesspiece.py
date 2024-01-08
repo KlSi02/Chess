@@ -17,24 +17,11 @@ def test_chess_piece_init(chess_piece):
     assert isinstance(chess_piece.piece_id, str)
 
 
-def test_find_position_of_char_by_id(chess_piece):
-    chessboard = MagicMock()
-    chessboard.save_chars_and_positions = {
-        "A1": None,
-        "B1": chess_piece,
-        "C1": None
-    }
-    result = chess_piece.find_position_of_piece_by_id(chess_piece.piece_id, chessboard)
-    assert result == "B1"
-
-
 def test_find_position_of_current_char(chess_piece):
     chessboard = MagicMock()
-    chessboard.save_chars_and_positions = {
+    chessboard.board_state = {
         "A1": None,
-        "B1": chess_piece,
-        "C1": None
+        "B1": chess_piece
     }
-    chess_piece.find_position_of_piece_by_id = MagicMock(return_value="B1")
     chess_piece.find_position_of_current_piece(chessboard)
     assert chess_piece.position == "B1"

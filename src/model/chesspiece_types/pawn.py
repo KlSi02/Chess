@@ -36,13 +36,11 @@ class Pawn(ChessPiece):
         for offset in [-1, 1]:
             new_alpha = chr(ord(alpha) + offset)
             new_numb = numb + direction
-            # Überprüfen, ob der neue Buchstabe innerhalb der Brettgrenzen liegt
             if 'A' <= new_alpha <= 'H':
                 diag_square = new_alpha + str(new_numb)
 
                 if diag_square in chessboard.board_state:
                     target_char = chessboard.board_state.get(diag_square)
-                    # Überprüfen, ob das Diagonalfeld eine gegnerische Figur enthält
                     if target_char is not None and self.team.name != target_char.team.name:
                         self.possible_moves.add(diag_square)
 
@@ -56,7 +54,6 @@ class Pawn(ChessPiece):
             for offset in [-1, 1]:
                 new_alpha = chr(ord(alpha) + offset)
                 new_numb = numb + direction
-                # Überprüfen, ob der neue Buchstabe innerhalb der Brettgrenzen liegt
                 if 'A' <= new_alpha <= 'H':
                     diag_square = new_alpha + str(new_numb)
 

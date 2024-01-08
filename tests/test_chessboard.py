@@ -15,7 +15,6 @@ def chessboard():
 
 def test_initialization(chessboard):
     assert len(chessboard.board_state) == 64
-    assert chessboard.save_all_steps == {}
 
 
 def test_if_pawn_on_board(chessboard):

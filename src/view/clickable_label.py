@@ -1,12 +1,9 @@
 import tempfile
 
 from PyQt6.QtSvg import QSvgRenderer
-from PyQt6.QtSvgWidgets import QSvgWidget
 from PyQt6.QtWidgets import QLabel, QApplication
 from PyQt6.QtGui import QDrag, QPixmap, QPainter, QColor
-from PyQt6.QtCore import Qt, QMimeData, QByteArray, QBuffer, QIODevice, pyqtSignal, pyqtProperty, QPropertyAnimation, \
-    QRectF
-from src.utils.helpers import PlayerSwitchObserver
+from PyQt6.QtCore import Qt, QMimeData, pyqtSignal, pyqtProperty, QPropertyAnimation
 
 
 class ClickableLabel(QLabel):

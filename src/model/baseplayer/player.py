@@ -1,5 +1,3 @@
-from src.model.chesspiece_types.pawn import Pawn
-
 
 class Player:
 
@@ -27,4 +25,3 @@ class Player:
         self.in_checkmate = False
         self.coverage_areas.clear()
         self.king_position = None
-

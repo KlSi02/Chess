@@ -1,5 +1,5 @@
 from PySide6.QtWidgets import QApplication
-from PySide6.QtCore import Qt, QPoint, QMimeData, QByteArray, QBuffer, QIODevice
+from PySide6.QtCore import Qt, QPoint
 from PySide6.QtGui import QPixmap
 from src.view.clickable_label import ClickableLabel
 

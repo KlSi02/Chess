@@ -19,7 +19,6 @@ def get_promotion_choice():
 
 
 def promote_pawn(pawn):
-    # Überprüfen, ob der Bauer das letzte Feld erreicht hat
     if (pawn.team.name == "WHITE" and pawn.position[1] == "8") or (
             pawn.team.name == "BLACK" and pawn.position[1] == "1"):
         return get_promotion_choice()
@@ -70,30 +69,27 @@ def is_castling_possible(chessboard, view, attacker, defender, king, rook, list_
 
     if attacker.in_check:
         return False
-    # Bestimmen der Positionen zwischen König und Turm
     start_pos = min(king.position, rook.position)
     end_pos = max(king.position, rook.position)
     row_number = king.position[1]
     between_positions = [chr(i) + row_number for i in range(ord(start_pos[0]) + 1, ord(end_pos[0]))]
 
-    # Überprüfen, ob die Felder zwischen König und Turm frei sind
     for pos in between_positions:
         if chessboard.board_state[pos] is not None:
             return False
 
-    # Überprüfen, ob der König durch die Rochade über angegriffene Felder zieht
     for pos in between_positions + [king.position]:
         if any(pos in moves for moves in defender.coverage_areas.values()):
             return False
 
-    if rook.position[0] < king.position[0]:  # Königsflügel-Rochade
+    if rook.position[0] < king.position[0]:
         new_king_pos = chr(ord(king.position[0]) - 2) + king.position[1]
 
         for label in view.labels:
             if label.objectName() == new_king_pos:
                 label.setStyleSheet("background-color: yellow; border: 1px solid black;")
 
-    else:  # Damenseite-Rochade
+    else:
         new_king_pos = chr(ord(king.position[0]) + 2) + king.position[1]
 
         for label in view.labels:
@@ -131,11 +127,11 @@ def update_pixmap(labels, old_pos, new_pos):
 def move_rook_for_castling(chessboard, view, rook_start_pos, new_king_pos):
     rook = chessboard.board_state.get(rook_start_pos)
     if rook is None:
-        return None  # Sicherstellen, dass der Turm vorhanden ist
+        return None
 
-    if new_king_pos[1] == '1':  # Weiß
+    if new_king_pos[1] == '1':
         new_rook_pos = 'D1' if new_king_pos == 'C1' else 'F1'
-    else:  # Schwarz
+    else:
         new_rook_pos = 'D8' if new_king_pos == 'C8' else 'F8'
 
     update_pixmap(view.labels, rook.position, new_rook_pos)
@@ -145,7 +141,7 @@ def move_rook_for_castling(chessboard, view, rook_start_pos, new_king_pos):
 def perform_castling(chessboard, view, old_king_pos, new_king_pos):
     king = chessboard.board_state.get(old_king_pos)
     if king is None:
-        return False  # Sicherstellen, dass der König vorhanden ist
+        return False
 
     if new_king_pos in ["C1", "C8"]:
         rook_start_pos = "A1" if new_king_pos == "C1" else "A8"
@@ -154,15 +150,13 @@ def perform_castling(chessboard, view, old_king_pos, new_king_pos):
 
     rook, new_rook_pos = move_rook_for_castling(chessboard, view, rook_start_pos, new_king_pos)
     if rook is None:
-        return False  # Abbruch, wenn kein Turm vorhanden ist
+        return False
 
-    # Bewegen von König und Turm
     chessboard.board_state[king.position] = None
     chessboard.board_state[rook.position] = None
     chessboard.board_state[new_king_pos] = king
     chessboard.board_state[new_rook_pos] = rook
 
-    # Aktualisieren der Positionen und Bewegungsstatus
     king.position = new_king_pos
     rook.position = new_rook_pos
     king.has_moved = True

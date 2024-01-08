@@ -3,10 +3,10 @@ from PyQt6.QtGui import QColor
 from src.model.chesspiece_types.pawn import Pawn
 from src.model.baseplayer.player import Player
 from src.utils.helpers import PieceTeam
-from controller.move_validator import MoveValidator
-from controller.move_executor.move_executor import MoveExecutor
-from controller.check_handler.check_handler import CheckHandler
-from controller.move_executor.special_rules_handler import get_rooks
+from src.controller.move_validation.move_validator import MoveValidator
+from src.controller.move_execution.move_executor import MoveExecutor
+from src.controller.check_handling.check_handler import CheckHandler
+from src.controller.move_execution.special_rules_handler import get_rooks
 from src.utils.helpers import give_player_threatened_fields
 from src.model.chesspiece_types.king import King
 from src.view.chessboard import UIChessboard

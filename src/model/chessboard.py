@@ -10,8 +10,8 @@ from src.model.chesspiece_types.pawn import Pawn
 
 def create_empty_board():
     empty_board = {}
-    for row in range(1, 9):  # Reihen 1 bis 8
-        for col in range(65, 73):  # Spalten A (65) bis H (72) in ASCII
+    for row in range(1, 9):
+        for col in range(65, 73):
             empty_board[f"{chr(col)}{row}"] = None
     return empty_board
 
@@ -35,7 +35,6 @@ class Chessboard:
 
     def get_initial_positions_for_team(self, team, pieces):
         if team == "white":
-            # Zuordnung der weißen Figuren
             self.board_state["A1"] = pieces["rooks"][0]
             self.board_state["B1"] = pieces["knights"][0]
             self.board_state["C1"] = pieces["bishops"][0]
@@ -45,9 +44,8 @@ class Chessboard:
             self.board_state["G1"] = pieces["knights"][1]
             self.board_state["H1"] = pieces["rooks"][1]
             for i in range(8):
-                self.board_state[f"{chr(65 + i)}2"] = pieces["pawns"][i]  # A2 bis H2 für Bauern
+                self.board_state[f"{chr(65 + i)}2"] = pieces["pawns"][i]
         else:
-            # Zuordnung der schwarzen Figuren
             self.board_state["A8"] = pieces["rooks"][0]
             self.board_state["B8"] = pieces["knights"][0]
             self.board_state["C8"] = pieces["bishops"][0]
@@ -57,7 +55,7 @@ class Chessboard:
             self.board_state["G8"] = pieces["knights"][1]
             self.board_state["H8"] = pieces["rooks"][1]
             for i in range(8):
-                self.board_state[f"{chr(65 + i)}7"] = pieces["pawns"][i]  # A7 bis H7 für Bauern
+                self.board_state[f"{chr(65 + i)}7"] = pieces["pawns"][i]
 
     def setup_board(self):
         white_pieces = self.create_pieces_for_team(PieceTeam.WHITE)

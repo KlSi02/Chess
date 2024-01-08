@@ -1,8 +1,8 @@
-from PyQt6 import QtWidgets, QtSvg
-from PyQt6.QtCore import pyqtSignal, QSize, Qt, QRect, QPoint
-from PyQt6.QtWidgets import QMainWindow, QWidget, QGridLayout, QMessageBox, QVBoxLayout, QDialog, QPushButton, QLabel, \
-    QSizePolicy, QFrame
-from PyQt6.QtGui import QIcon, QPixmap, QPainter, QFont, QColor, QPen
+from PyQt6 import QtWidgets
+from PyQt6.QtCore import QSize, Qt
+from PyQt6.QtWidgets import QWidget, QGridLayout, QMessageBox, QVBoxLayout, QDialog, QPushButton, QLabel, \
+    QSizePolicy
+from PyQt6.QtGui import QIcon, QPixmap, QPainter, QFont, QColor
 from src.view.clickable_label import ClickableLabel
 
 
@@ -38,7 +38,7 @@ class UIChessboard(QtWidgets.QMainWindow):
         zeilen_zahlen = ["8", "7", "6", "5", "4", "3", "2", "1"]  # Reversed for correct order
 
         # Set the border size
-        self.border_size = 20  # or any size you prefer
+        self.border_size = 20
 
         small_border_size = 10
         self.grid_layout.setContentsMargins(small_border_size, small_border_size, small_border_size, small_border_size)
@@ -54,18 +54,16 @@ class UIChessboard(QtWidgets.QMainWindow):
             for label in (top_letter_label, bottom_letter_label):
                 label.setAlignment(Qt.AlignmentFlag.AlignCenter)
                 label.setFont(font)
-                label.setMargin(0)  # Ensure the text is truly centered without extra space
+                label.setMargin(0)
                 self.grid_layout.addWidget(label, 0 if label == top_letter_label else rows + 1, i + 1, 1, 1)
                 label.setStyleSheet("background-color: transparent;")
 
-        # Add labels for the rank numbers (1-8) on the left and right
         for i, number in enumerate(zeilen_zahlen):
             left_number_label = QLabel(number)
             right_number_label = QLabel(number)
 
             for label in (left_number_label, right_number_label):
                 label.setAlignment(Qt.AlignmentFlag.AlignCenter | Qt.AlignmentFlag.AlignVCenter)
-                # label.setFixedSize(self.border_size, self.border_size)
                 label.setFont(font)
                 label.setStyleSheet("background-color: transparent;")
 
@@ -88,16 +86,15 @@ class UIChessboard(QtWidgets.QMainWindow):
                     label.set_highlight_color(soft_white)
                 label_name = spalten_buchstaben[col] + zeilen_zahlen[row]
                 label.setObjectName(label_name)
-                self.grid_layout.addWidget(label, row + 1, col + 1)  # Offset by 1 for borders
+                self.grid_layout.addWidget(label, row + 1, col + 1)
                 self.labels.append(label)
 
     def paintEvent(self, event):
-        super().paintEvent(event)  # Rufen Sie zuerst das Ereignis der Basisklasse auf
+        super().paintEvent(event)
 
         painter = QPainter(self)
         painter.setRenderHint(QPainter.RenderHint.Antialiasing)
 
-        # Zeichnen Sie den Marmorhintergrund über das gesamte Fenster
         marble_pixmap = QPixmap("assets/marble_wallpaper.jpg")
         if marble_pixmap.isNull():
             print("Fehler beim Laden des Marmorhintergrunds.")
@@ -107,35 +104,27 @@ class UIChessboard(QtWidgets.QMainWindow):
         painter.end()
 
     def reset_ui_chessboard(self):
-        # Entferne alle Labels aus dem Grid-Layout
         for label in self.labels:
             self.grid_layout.removeWidget(label)
             label.deleteLater()
 
-        # Löschen der Label-Liste
         self.labels.clear()
 
-        # Erstelle das UI neu
         self.create_ui()
         self.adjustSize()
         self.update()
 
     def resizeEvent(self, event):
         super().resizeEvent(event)
-        # ... (bestehenden Code für resizeEvent behalten)
 
-        # Berechnen der Größe des Grids ohne die Ränder
         grid_size = min(self.central_widget.width() - self.border_size * 2,
                         self.central_widget.height() - self.border_size * 2)
 
-        # Berechnen der Größe eines einzelnen Labels
         label_size = grid_size // 8
 
-        # Alle Labels anpassen
         for label in self.labels:
             label.setFixedSize(label_size, label_size)
 
-            # Pixmap anpassen, falls vorhanden
             if label.pixmap():
                 scaled_pixmap = label.pixmap().scaled(QSize(label_size, label_size),
                                                       Qt.AspectRatioMode.KeepAspectRatio,
@@ -144,9 +133,7 @@ class UIChessboard(QtWidgets.QMainWindow):
 
         extra_width = self.central_widget.width() - grid_size - 2 * self.border_size
 
-        # Verteilen Sie das zusätzliche Spacing gleichmäßig auf der linken und rechten Seite.
         self.grid_layout.setContentsMargins(extra_width // 2, self.border_size, extra_width // 2, self.border_size)
-        # Aktualisieren Sie die Größe des Fensters und Layout
 
     def show_checkmate_dialog(self, winning_player, on_new_game, on_close_game):
         msg_box = QMessageBox(self)
