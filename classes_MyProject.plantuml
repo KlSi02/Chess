@@ -1,0 +1,249 @@
+@startuml classes_MyProject
+set namespaceSeparator none
+class "Bishop" as ChessProject.src.model.chesspiece_types.bishop.Bishop {
+  possible_moves_without_knowing_board : list
+  possible_movements(chessboard)
+}
+class "CheckResolver" as ChessProject.src.controller.check_management.check_resolver.CheckResolver {
+  attacker
+  chessboard
+  defender
+  find_resolve_check_positions(attackers_check_move_dict)
+  on_player_switch(new_attacker, new_defender)
+  simulate_move(move_to_simulate, defending_piece, resolve_check_pos, defender_king_position)
+  validate_defense_move(move_to_check, attacking_piece)
+}
+class "ChessCheckHandler" as ChessProject.src.controller.check_management.check_handler.ChessCheckHandler {
+  attacker
+  attackers_check_moves : dict
+  check_resolver
+  checkmate_signal
+  chessboard
+  defender
+  double_check : bool
+  move_validator_king
+  positions_for_red_stylesheet : set
+  handle_check_situation(callback, view)
+  on_player_switch(new_attacker, new_defender)
+  update_check_status_and_positions()
+}
+class "ChessPiece" as ChessProject.src.model.baseplayer.chesspiece.ChessPiece {
+  piece_id : str
+  position : NoneType
+  possible_moves : set
+  possible_moves_on_current_board : list
+  possible_moves_without_knowing_board : list
+  team
+  find_position_of_current_piece(chessboard)
+  {abstract}possible_movements(chessboard)
+}
+class "Chessboard" as ChessProject.src.model.chessboard.Chessboard {
+  board_state : dict
+  last_moves : list
+  create_pieces_for_team(team)
+  get_initial_positions_for_team(team, pieces)
+  reset()
+  setup_board()
+}
+class "ClickableLabel" as ChessProject.src.view.clickable_label.ClickableLabel {
+  animation : NoneType
+  callback
+  castling_signal
+  current_drag_label : NoneType
+  drag_start_position : NoneType
+  en_passant_signal
+  highlight_labels_signal
+  is_pulsing : bool
+  make_move_signal
+  original_pixmap : NoneType
+  pulsing_color : NoneType
+  svg_path : str
+  svg_renderer : NoneType
+  color()
+  dragEnterEvent(event)
+  dropEvent(event)
+  mouseMoveEvent(event)
+  mousePressEvent(event)
+  resizeEvent(event)
+  set_highlight_color(color, alpha)
+  set_highlight_color_with_alpha(color, alpha)
+  set_svg(svg_path)
+  start_pulsing(start_color, end_color, duration)
+  stop_pulsing()
+  update_pixmap()
+  update_stylesheet()
+}
+class "CommonMovements" as ChessProject.src.utils.helpers.CommonMovements {
+  check_and_append_moves(chess_piece, chessboard, alpha, numb, alpha_step, numb_step)
+}
+class "Controller" as ChessProject.src.controller.controller.Controller {
+  attacker
+  check_handler
+  defender
+  last_clicked_piece : NoneType
+  model
+  move_executor
+  move_validator
+  observers : list
+  original_stylesheets : dict
+  red_stylesheets : dict
+  view
+  clear_castling_highlights()
+  clear_check_highlights()
+  clear_en_passant_highlights()
+  clear_possible_moves_highlights()
+  close_game()
+  handle_clicked_label(square_name)
+  highlight_possible_moves(piece)
+  if_piece_in_self_team(pos)
+  initialize_chars_with_pictures()
+  initialize_game()
+  on_checkmate(winning_player)
+  on_stalemate(winning_player)
+  player_switch()
+  register_observer(observer)
+  reset_data()
+  start_new_game()
+  style_square_red_if_check()
+  update_state_of_game()
+}
+class "King" as ChessProject.src.model.chesspiece_types.king.King {
+  has_moved : bool
+  is_check : bool
+  possible_moves_without_knowing_board : list
+  possible_movements(chessboard)
+}
+class "Knight" as ChessProject.src.model.chesspiece_types.knight.Knight {
+  possible_moves_without_knowing_board : list
+  possible_movements(chessboard)
+}
+class "MoveExecutor" as ChessProject.src.controller.move_execution.move_executor.MoveExecutor {
+  attacker
+  chessboard
+  defender
+  special_rules_handler
+  update_state_of_game
+  handle_special_moves(piece, old_pos, new_pos)
+  move_execution(old_pos, new_pos)
+  on_player_switch(new_attacker, new_defender)
+  use_castling(old_king_pos, new_king_pos)
+  use_en_passant(old_pawn_pos, new_pawn_pos)
+}
+class "MoveSafetyChecker" as ChessProject.src.controller.move_validation.move_safety_checker.MoveSafetyChecker {
+  attacker
+  chessboard
+  defender
+  pieces_to_check_moves : set
+  threatening_pieces : set
+  check_pieces_around_king(column, row, column_step, row_step)
+  evaluate_move_impact_on_king(king_pos)
+  get_surrounding_pieces()
+  identify_threatening_pieces(target_position)
+  on_player_switch(new_attacker, new_defender)
+  simulate_and_filter_piece_moves()
+}
+class "MoveValidator" as ChessProject.src.controller.move_validation.move_validator.MoveValidator {
+  attacker
+  chessboard
+  defender
+  move_safety_checker
+  stalemate_signal
+  check_for_stalemate(view)
+  evaluate_king_move(king_pos)
+  filter_king_moves()
+  on_player_switch(new_attacker, new_defender)
+  simulate_king_move(king)
+  update_alive_pieces()
+  update_king_positions()
+}
+class "MoveValidatorKing" as ChessProject.src.controller.check_management.move_validator_king_in_check.MoveValidatorKing {
+  attacker
+  attackers_check_moves
+  chessboard
+  defender
+  evaluate_king_move(king_pos)
+  filter_attacking_piece(king, attackers_check_moves)
+  filter_moves_excluding_danger_line(king, attacking_piece)
+  filter_only_safe_moves(king)
+  only_king_can_move()
+  simulate_king_move(king)
+  update_possible_moves_of_king(king, attackers_check_moves, check_handler)
+}
+class "Pawn" as ChessProject.src.model.chesspiece_types.pawn.Pawn {
+  en_passant : bool
+  first_turn : bool
+  add_diagonal_moves(chessboard)
+  possible_movements(chessboard)
+}
+class "PieceTeam" as ChessProject.src.utils.helpers.PieceTeam {
+  name
+}
+class "Player" as ChessProject.src.model.baseplayer.player.Player {
+  alive_pieces : list
+  captured_pieces : list
+  coverage_areas : dict
+  in_check : bool
+  in_checkmate : bool
+  king_position : NoneType
+  set_check : dict
+  team
+  get_alive_pieces(chessboard)
+  reset()
+}
+class "PlayerSwitchObserver" as ChessProject.src.utils.helpers.PlayerSwitchObserver {
+  {abstract}on_player_switch(new_attacker, new_defender)
+}
+class "PromotionDialog" as ChessProject.src.view.chessboard.PromotionDialog {
+  layout
+  pos
+  setup_new_piece
+  team
+  update_piece
+  update_state_of_game
+  init_ui()
+  on_piece_selected()
+}
+class "Queen" as ChessProject.src.model.chesspiece_types.queen.Queen {
+  possible_moves_without_knowing_board : list
+  possible_movements(chessboard)
+}
+class "Rook" as ChessProject.src.model.chesspiece_types.rook.Rook {
+  has_moved : bool
+  possible_moves_without_knowing_board : list
+  possible_movements(chessboard)
+}
+class "SpecialRulesHandler" as ChessProject.src.controller.move_execution.special_rules_handler.SpecialRulesHandler {
+  attacker
+  chessboard
+  defender
+  stylesheets_castling : dict
+  stylesheets_en_passant : dict
+  view
+  add_pawn_moves_to_coverage_areas()
+  check_pawn_promotion(callback)
+  check_pawn_promotion_(pos, callback)
+  highlight_en_passant(pawn)
+  is_castling_possible(king, rook)
+  move_rook_for_castling(rook_start_pos, new_king_pos)
+  on_player_switch(new_attacker, new_defender)
+  perform_castling(old_king_pos, new_king_pos)
+  perform_en_passant(old_pawn_pos, new_pawn_pos)
+  update_piece(new_piece, pos)
+}
+class "UIChessboard" as ChessProject.src.view.chessboard.UIChessboard {
+  border_size : NoneType, int
+  callback
+  central_widget
+  grid_layout
+  labels : list
+  promotion_dialog
+  create_ui()
+  paintEvent(event)
+  reset_ui_chessboard()
+  resizeEvent(event)
+  show_checkmate_dialog(winning_player, on_new_game, on_close_game)
+  show_promotion_dialog(callback, callback1, callback2, pos, team)
+  show_stalemate_dialog(winning_player, on_new_game, on_close_game)
+}
+ChessProject.src.view.chessboard.PromotionDialog --* ChessProject.src.view.chessboard.UIChessboard : promotion_dialog
+@enduml
