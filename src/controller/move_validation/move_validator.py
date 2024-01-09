@@ -3,8 +3,8 @@ from PyQt6.QtCore import pyqtSignal, QObject
 from src.model.chesspiece_types.pawn import Pawn
 from src.model.chesspiece_types.king import King
 from src.model.baseplayer.player import Player
-from controller.move_validation.move_safety_checker import MoveSafetyChecker
-from utils.helpers import get_key_by_value, update_possible_moves, PlayerSwitchObserver
+from src.controller.move_validation.move_safety_checker import MoveSafetyChecker
+from src.utils.helpers import get_key_by_value, update_possible_moves, PlayerSwitchObserver
 
 
 class MoveValidator(QObject, PlayerSwitchObserver):

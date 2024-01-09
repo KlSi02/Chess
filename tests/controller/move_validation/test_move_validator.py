@@ -4,7 +4,7 @@ from src.model.chesspiece_types.king import King
 from src.model.chesspiece_types.rook import Rook
 from src.model.baseplayer.player import Player
 from src.utils.helpers import PieceTeam
-from controller.move_validation.move_validator import MoveValidator
+from src.controller.move_validation.move_validator import MoveValidator
 
 
 @pytest.fixture

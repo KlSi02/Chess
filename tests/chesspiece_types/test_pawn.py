@@ -1,7 +1,7 @@
 import pytest
 from src.model.chesspiece_types.pawn import Pawn
 from src.model.chessboard import Chessboard
-from utils.helpers import PieceTeam
+from src.utils.helpers import PieceTeam
 
 
 @pytest.fixture

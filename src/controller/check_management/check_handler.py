@@ -1,7 +1,7 @@
 from src.utils.helpers import get_key_by_value, PlayerSwitchObserver
-from controller.check_management.check_resolver import CheckResolver
+from src.controller.check_management.check_resolver import CheckResolver
 from PyQt6.QtCore import QObject, pyqtSignal
-from controller.check_management.move_validator_king_in_check import MoveValidatorKing
+from src.controller.check_management.move_validator_king_in_check import MoveValidatorKing
 
 
 class ChessCheckHandler(QObject, PlayerSwitchObserver):
