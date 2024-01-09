@@ -79,11 +79,11 @@ class UIChessboard(QtWidgets.QMainWindow):
                 label.setAlignment(Qt.AlignmentFlag.AlignCenter)
                 label.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
                 if (row + col) % 2 == 0:
-                    grey_color = QColor(155, 155, 155)
-                    label.set_highlight_color(grey_color)
-                else:
                     soft_white = QColor(255, 255, 255)
                     label.set_highlight_color(soft_white)
+                else:
+                    grey_color = QColor(155, 155, 155)
+                    label.set_highlight_color(grey_color)
                 label_name = spalten_buchstaben[col] + zeilen_zahlen[row]
                 label.setObjectName(label_name)
                 self.grid_layout.addWidget(label, row + 1, col + 1)

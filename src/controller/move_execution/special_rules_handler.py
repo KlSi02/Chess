@@ -4,10 +4,18 @@ from src.model.chesspiece_types.rook import Rook
 from src.model.chesspiece_types.bishop import Bishop
 from src.model.chesspiece_types.knight import Knight
 from src.utils.helpers import PieceTeam, PlayerSwitchObserver
-from PyQt6.QtGui import QPixmap, QColor
+from PyQt6.QtGui import QColor
 
 
 def check_en_passant(chessboard, attacker, old_pos, new_pos):
+    """
+    Checks and updates the en passant status for pawns after a pawn move.
+
+    :param chessboard: The current state of the chessboard.
+    :param attacker: The player who made the move.
+    :param old_pos: The original position of the moved pawn.
+    :param new_pos: The new position of the moved pawn.
+    """
     row_difference = int(new_pos[1]) - int(old_pos[1])
 
     if abs(row_difference) == 2:
@@ -98,9 +106,9 @@ def update_pixmap(labels, old_pos, new_pos):
 
     # If both labels are found, move the pixmap from the old to the new label
     if old_label and new_label:
-        pixmap = old_label.pixmap().copy()
+        pixmap = old_label.svg_path
         old_label.set_svg("")  # Clear the old pixmap
-        new_label.setPixmap(pixmap)  # Set the new pixmap
+        new_label.set_svg(pixmap)  # Set the new pixmap
 
 
 def setup_new_piece(piece_type, team):
@@ -125,8 +133,27 @@ def setup_new_piece(piece_type, team):
 
 
 class SpecialRulesHandler(PlayerSwitchObserver):
+    """
+    Handles special chess rules including en passant, pawn promotion, and castling.
+
+    Attributes:
+        chessboard: The chessboard object representing the game state.
+        attacker: The current attacking player.
+        defender: The current defending player.
+        view: The game view object for UI interactions.
+        stylesheets_castling: Stores stylesheet information for castling move highlighting.
+        stylesheets_en_passant: Stores stylesheet information for en passant move highlighting.
+    """
 
     def __init__(self, view, chessboard, attacker, defender):
+        """
+        Initializes the SpecialRulesHandler with necessary game components.
+
+        :param view: The view component of the chess game for UI interactions.
+        :param chessboard: The chessboard representing the current state of the game.
+        :param attacker: The current attacking player.
+        :param defender: The current defending player.
+        """
         self.chessboard = chessboard
         self.attacker = attacker
         self.defender = defender
@@ -135,6 +162,11 @@ class SpecialRulesHandler(PlayerSwitchObserver):
         self.stylesheets_en_passant = {}
 
     def highlight_en_passant(self, pawn):
+        """
+        Highlights the possible en passant move on the game board.
+
+        :param pawn: The pawn piece that has the potential to perform an en passant move.
+        """
         if pawn.en_passant:
             old_pos, new_pos = self.chessboard.last_moves[-1]
             row_numb = 1 if pawn.team.name == "BLACK" else -1
@@ -143,7 +175,6 @@ class SpecialRulesHandler(PlayerSwitchObserver):
 
             for label in self.view.labels:
                 if label.objectName() == pos_to_mark:
-                    print("label wurde gefunden")
                     self.stylesheets_en_passant[label] = label._color
                     en_passant_color = QColor(130, 160, 200, 150)
                     label.start_pulsing(en_passant_color, en_passant_color.darker())
@@ -168,6 +199,15 @@ class SpecialRulesHandler(PlayerSwitchObserver):
                 label.set_svg("")
 
     def check_pawn_promotion_(self, pos, callback):
+        """
+        Checks each pawn for promotion eligibility and performs the promotion if eligible.
+
+        This method iterates through all pawns belonging to the current attacker and checks
+        if they have reached the promotion row. If so, it prompts for a piece choice and updates
+        the board state accordingly.
+
+        :param callback: A callback function to update the game state after promotion.
+        """
         self.view.show_promotion_dialog(setup_new_piece, self.update_piece, callback, pos, self.attacker.team)
 
     def add_pawn_moves_to_coverage_areas(self):
@@ -190,8 +230,6 @@ class SpecialRulesHandler(PlayerSwitchObserver):
         self.chessboard.board_state[pos] = None
         self.chessboard.board_state[pos] = new_piece
         new_piece.position = pos
-
-        print(self.chessboard.board_state.items())
 
         self.attacker.alive_pieces.append(new_piece)
 
@@ -224,28 +262,36 @@ class SpecialRulesHandler(PlayerSwitchObserver):
                     return True
 
     def is_castling_possible(self, king, rook):
+        """
+        Determines if castling is possible given the current board state.
+
+        This method checks if both the king and the rook have not moved, if there are no pieces
+        between them, and if the squares the king passes through are not under attack.
+
+        :param king: The king piece involved in castling.
+        :param rook: The rook piece involved in castling.
+        :return: True if castling is possible, False otherwise.
+        """
         if king.has_moved or rook.has_moved:
             return False
 
         if self.attacker.in_check:
             return False
-        # Bestimmen der Positionen zwischen König und Turm
         start_pos = min(king.position, rook.position)
         end_pos = max(king.position, rook.position)
         row_number = king.position[1]
         between_positions = [chr(i) + row_number for i in range(ord(start_pos[0]) + 1, ord(end_pos[0]))]
 
-        # Überprüfen, ob die Felder zwischen König und Turm frei sind
         for pos in between_positions:
             if self.chessboard.board_state[pos] is not None:
                 return False
 
-        # Überprüfen, ob der König durch die Rochade über angegriffene Felder zieht
         for pos in between_positions + [king.position]:
-            if any(pos in moves for moves in self.defender.coverage_areas.values()):
-                return False
+            for piece in self.defender.alive_pieces:
+                if pos in piece.original_possible_moves:
+                    return
 
-        if rook.position[0] < king.position[0]:  # Königsflügel-Rochade
+        if rook.position[0] < king.position[0]:
             new_king_pos = chr(ord(king.position[0]) - 2) + king.position[1]
 
             for label in self.view.labels:
@@ -255,7 +301,7 @@ class SpecialRulesHandler(PlayerSwitchObserver):
                     label.start_pulsing(castling_color, castling_color.darker())
                     label.pulsing_color = "yellow"
 
-        else:  # Damenseite-Rochade
+        else:
             new_king_pos = chr(ord(king.position[0]) + 2) + king.position[1]
 
             for label in self.view.labels:
@@ -268,6 +314,16 @@ class SpecialRulesHandler(PlayerSwitchObserver):
         return True
 
     def move_rook_for_castling(self, rook_start_pos, new_king_pos):
+        """
+        Moves the rook to its new position during a castling move.
+
+        This method is called as part of the castling move to update the rook's position
+        on the board and in the UI.
+
+        :param rook_start_pos: The starting position of the rook.
+        :param new_king_pos: The new position of the king, which determines the rook's new position.
+        :return: A tuple containing the rook piece and its new position, or None if the rook is not found.
+        """
         rook = self.chessboard.board_state.get(rook_start_pos)
         if rook is None:
             return None  # Sicherstellen, dass der Turm vorhanden ist
@@ -281,6 +337,16 @@ class SpecialRulesHandler(PlayerSwitchObserver):
         return rook, new_rook_pos
 
     def perform_castling(self, old_king_pos, new_king_pos):
+        """
+        Performs the castling move, updating the positions of the king and rook.
+
+        This method moves both the king and the rook to their new positions during a castling move,
+        updates the board state, and reflects these changes in the UI.
+
+        :param old_king_pos: The original position of the king.
+        :param new_king_pos: The new position of the king after castling.
+        :return: True if the castling move is successfully performed, False otherwise.
+        """
         king = self.chessboard.board_state.get(old_king_pos)
         if king is None:
             return False  # Sicherstellen, dass der König vorhanden ist
@@ -309,5 +375,8 @@ class SpecialRulesHandler(PlayerSwitchObserver):
         return True
 
     def on_player_switch(self, new_attacker, new_defender):
+        """
+        Handles the player switch, updating the attacker and defender.
+        """
         self.attacker = new_attacker
         self.defender = new_defender

@@ -20,7 +20,7 @@ def setup():
 def test_give_king_pos(setup):
     chessboard, attacker, defender, move_validator = setup
 
-    move_validator.give_king_pos()
+    move_validator.update_king_positions()
 
     # Verify that the kings' positions are correctly assigned
     assert attacker.king_position == "E1"
@@ -31,7 +31,7 @@ def test_give_king_pos(setup):
 
 def test_get_alive_pieces(setup):
     chessboard, attacker, defender, move_validator = setup
-    move_validator.get_alive_pieces()
+    move_validator.update_alive_pieces()
 
     assert len(attacker.alive_pieces) == 16
     assert len(defender.alive_pieces) == 16

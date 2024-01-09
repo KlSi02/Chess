@@ -1,11 +1,9 @@
 from PyQt6.QtGui import QColor
-
 from src.model.chesspiece_types.pawn import Pawn
 from src.model.baseplayer.player import Player
 from src.utils.helpers import PieceTeam
-from src.controller.move_validation.move_validator import MoveValidator
 from src.controller.move_execution.move_executor import MoveExecutor
-from src.controller.check_handling.check_handler import CheckHandler
+from src.controller.check_management.check_handler import ChessCheckHandler
 from src.controller.move_execution.special_rules_handler import get_rooks
 from src.utils.helpers import give_player_threatened_fields
 from src.model.chesspiece_types.king import King
@@ -13,8 +11,17 @@ from src.view.chessboard import UIChessboard
 
 
 class Controller:
+    """
+    Central controller class for managing the flow and rules of a chess game. This class coordinates
+    interactions between the model, view, and various game logic handlers.
+    """
 
     def __init__(self, model):
+        """
+        Initializes the Controller with the chess game model and sets up the game view and handlers.
+
+        :param model: The model representing the state of the chess game.
+        """
 
         self.model = model
         self.view = UIChessboard(self.if_piece_in_self_team)
@@ -27,9 +34,10 @@ class Controller:
 
         self.move_executor = MoveExecutor(self.model, self.view, self.attacker, self.defender,
                                           self.update_state_of_game)
-        self.check_handler = CheckHandler(self.model, self.attacker, self.defender)
+        self.check_handler = ChessCheckHandler(self.model, self.attacker, self.defender)
         self.check_handler.checkmate_signal.connect(self.on_checkmate)
 
+        from src.controller.move_validation.move_validator import MoveValidator
         self.move_validator = MoveValidator(self.model, self.attacker, self.defender)
         self.move_validator.stalemate_signal.connect(self.on_stalemate)
 
@@ -47,15 +55,27 @@ class Controller:
         self.register_observer(self.move_executor.special_rules_handler)
 
     def register_observer(self, observer):
+        """
+        Registers an observer to be notified during player switches.
+
+        :param observer: The observer to be registered.
+        """
         if observer not in self.observers:
             self.observers.append(observer)
 
     def player_switch(self):
+        """
+        Switches the roles of attacker and defender and notifies all observers.
+        """
         self.attacker, self.defender = self.defender, self.attacker
         for observer in self.observers:
             observer.on_player_switch(self.attacker, self.defender)
 
     def initialize_chars_with_pictures(self):
+        """
+        Initializes the chessboard UI with images representing the chess pieces.
+        Sets up signal connections for UI interactions.
+        """
         for label in self.view.labels:
             label.setScaledContents(True)
 
@@ -72,12 +92,18 @@ class Controller:
                 label.set_svg(f"assets/{piece_name}.svg")
 
     def initialize_game(self):
+        """
+        Initializes the game state, updates king positions, alive pieces, and threatened fields.
+        """
         self.initialize_chars_with_pictures()
-        self.move_validator.give_king_pos()
-        self.move_validator.get_alive_pieces()
+        self.move_validator.update_king_positions()
+        self.move_validator.update_alive_pieces()
         give_player_threatened_fields(self.model, self.attacker, self.defender)
 
     def start_new_game(self):
+        """
+        Resets the game state and starts a new game.
+        """
         self.reset_data()
         self.model.reset()
         self.view.reset_ui_chessboard()
@@ -90,22 +116,32 @@ class Controller:
         self.initialize_game()
 
     def close_game(self):
+        """
+        Closes the game view and performs any necessary cleanup.
+        """
         self.view.close()
-        print("Bis zum nächsten Mal!")
 
     def on_checkmate(self, winning_player):
+        """
+        Handles the checkmate event, displaying a dialog and offering options for the next steps.
+
+        :param winning_player: The player who has won the game.
+        """
         self.view.show_checkmate_dialog(winning_player, self.start_new_game, self.close_game)
 
     def on_stalemate(self, winning_player):
+        """
+        Handles the stalemate event, displaying a dialog and offering options for the next steps.
+
+        :param winning_player: The player involved in the stalemate.
+        """
         self.view.show_stalemate_dialog(winning_player, self.start_new_game, self.close_game)
 
     def clear_possible_moves_highlights(self):
-        """Entfernt alle Hervorhebungen und setzt die Farben zurück."""
         for square in self.view.labels:
-            square.stop_pulsing()  # Stoppen der Animation
+            square.stop_pulsing()
             if square in self.original_stylesheets.keys():
                 square.pulsing_color = None
-                # Verwenden Sie die gespeicherte QColor-Instanz, um die Originalfarbe zurückzusetzen
                 original_color = self.original_stylesheets[square]
                 square.set_highlight_color(original_color)
         self.original_stylesheets.clear()
@@ -134,6 +170,11 @@ class Controller:
         self.move_executor.special_rules_handler.stylesheets_castling.clear()
 
     def handle_clicked_label(self, square_name):
+        """
+        Handles the event when a label (chessboard square) is clicked in the UI.
+
+        :param square_name: The name of the square that was clicked.
+        """
         target_char = self.model.board_state.get(square_name)
 
         if not target_char or target_char.team != self.attacker.team:
@@ -164,6 +205,11 @@ class Controller:
             print(f"Figur kann nicht bewegt werden, Fehler: {e}")
 
     def highlight_possible_moves(self, piece):
+        """
+        Highlights all possible moves for a selected piece on the chessboard.
+
+        :param piece: The piece for which to highlight possible moves.
+        """
         for square in self.view.labels:
             if square.objectName() in piece.possible_moves:
                 if square not in self.original_stylesheets:
@@ -173,6 +219,9 @@ class Controller:
                     square.pulsing_color = "green"
 
     def style_square_red_if_check(self):
+        """
+        Styles the squares red if they are part of a check situation.
+        """
         if self.defender.in_check is True:
             for label in self.view.labels:
                 if label.objectName() in self.check_handler.positions_for_red_stylesheet:
@@ -182,6 +231,9 @@ class Controller:
                     label.start_pulsing(check_color, check_color.darker())
 
     def reset_data(self):
+        """
+        Resets game data, clears highlights and cached stylesheets, and clears piece moves.
+        """
         self.clear_possible_moves_highlights()
 
         self.attacker.coverage_areas.clear()
@@ -204,12 +256,13 @@ class Controller:
         for piece in self.model.board_state.values():
             if piece:
                 piece.possible_moves.clear()
+                piece.original_possible_moves.clear()
 
     def update_state_of_game(self):
         self.reset_data()
-        self.move_validator.give_king_pos()
+        self.move_validator.update_king_positions()
         give_player_threatened_fields(self.model, self.attacker, self.defender)
-        self.check_handler.if_check(self.style_square_red_if_check, self.view)
+        self.check_handler.handle_check_situation(self.style_square_red_if_check, self.view)
         self.style_square_red_if_check()
         self.player_switch()
 
@@ -217,8 +270,8 @@ class Controller:
 
         if not self.attacker.in_check:
             self.move_validator.filter_king_moves()
-            self.move_validator.move_safety_checker.get_pieces_that_surround_king()
-            self.move_validator.stalemate(self.view)
+            self.move_validator.move_safety_checker.get_surrounding_pieces()
+            self.move_validator.check_for_stalemate(self.view)
 
     def if_piece_in_self_team(self, pos):
         for square, piece in self.model.board_state.items():

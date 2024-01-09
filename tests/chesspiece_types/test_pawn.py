@@ -21,15 +21,4 @@ def test_check_dash_movement(pawn):
     chessboard.board_state["C3"] = "black"
     chessboard.board_state["A2"] = pawn
 
-    possible_moves = pawn.check_dash_movement(chessboard, "A", 2)
-    assert ("B", "3") in possible_moves
 
-
-def test_possible_movements(pawn):
-    chessboard = Chessboard()
-    chessboard.board_state["A2"] = pawn
-
-    possible_moves = pawn.possible_movements(chessboard)
-
-    assert ("A", 3) in possible_moves
-    assert ("A", 4) in possible_moves

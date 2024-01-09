@@ -8,21 +8,30 @@ from utils.helpers import get_key_by_value, update_possible_moves, PlayerSwitchO
 
 
 class MoveValidator(QObject, PlayerSwitchObserver):
+    """
+    Responsible for validating chess piece movements and updating potential moves
+    based on the current state of the chessboard. It also checks for stalemate conditions.
+    """
     stalemate_signal = pyqtSignal(str)
-    """
-    The MoveValidator class is responsible for validating chess piece movements and
-    updating potential moves based on the current state of the chessboard.
-    """
 
-    def __init__(self, chessboard, current_player, opponent):
+    def __init__(self, chessboard, attacker, defender):
+        """
+        Initializes the MoveValidator with the current chessboard and players.
 
+        :param chessboard: The chessboard object containing the current game state.
+        :param attacker: The player currently making their move.
+        :param defender: The opposing player.
+        """
         super().__init__()
         self.chessboard = chessboard
-        self.attacker = current_player
-        self.defender = opponent
-        self.move_safety_checker = MoveSafetyChecker(chessboard, current_player, opponent)
+        self.attacker = attacker
+        self.defender = defender
+        self.move_safety_checker = MoveSafetyChecker(chessboard, attacker, defender)
 
-    def give_king_pos(self):
+    def update_king_positions(self):
+        """
+        Updates the stored positions of both players' kings.
+        """
         for pos, piece in self.chessboard.board_state.items():
             if isinstance(piece, King):
                 if isinstance(self.attacker, Player) and self.attacker.team == piece.team:
@@ -30,11 +39,19 @@ class MoveValidator(QObject, PlayerSwitchObserver):
                 elif isinstance(self.defender, Player):
                     self.defender.king_position = pos
 
-    def get_alive_pieces(self):
+    def update_alive_pieces(self):
+        """
+        Updates the list of alive pieces for both players.
+        """
         for player in [self.attacker, self.defender]:
             player.get_alive_pieces(self.chessboard)
 
     def simulate_king_move(self, king):
+        """
+        Simulates all potential moves of the king to check if they are safe.
+
+        :param king: The king piece whose moves are to be simulated.
+        """
         moves_to_discard = set()
         for move in king.possible_moves.copy():
             # Temporarily update the board state to simulate the move.
@@ -56,6 +73,12 @@ class MoveValidator(QObject, PlayerSwitchObserver):
         king.possible_moves.difference_update(moves_to_discard)
 
     def evaluate_king_move(self, king_pos):
+        """
+        Evaluates a potential move of the king for safety.
+
+        :param king_pos: The position to evaluate for the king.
+        :return: True if the move is safe, False otherwise.
+        """
         all_threatening_moves = set()
         for piece in self.defender.coverage_areas.keys():
             if piece not in self.chessboard.board_state.values():
@@ -79,6 +102,9 @@ class MoveValidator(QObject, PlayerSwitchObserver):
         return king_pos in all_threatening_moves
 
     def filter_king_moves(self):
+        """
+        Filters out unsafe moves from the king's list of potential moves.
+        """
         moves_to_discard = set()
         king = self.chessboard.board_state.get(self.attacker.king_position)
 
@@ -95,7 +121,13 @@ class MoveValidator(QObject, PlayerSwitchObserver):
         king.possible_moves.difference_update(moves_to_discard)
         self.simulate_king_move(king)
 
-    def stalemate(self, view):
+    def check_for_stalemate(self, view):
+        """
+        Checks if the current player is in a stalemate condition.
+
+        :param view: The game view, used for updating the UI in case of a stalemate.
+        :return: True if a stalemate is detected, False otherwise.
+        """
         stalemate = True
 
         for piece in self.attacker.alive_pieces:
@@ -126,5 +158,8 @@ class MoveValidator(QObject, PlayerSwitchObserver):
             self.stalemate_signal.emit(winning_player)
 
     def on_player_switch(self, new_attacker, new_defender):
+        """
+        Handles the player switch, updating the attacker and defender.
+        """
         self.attacker = new_attacker
         self.defender = new_defender

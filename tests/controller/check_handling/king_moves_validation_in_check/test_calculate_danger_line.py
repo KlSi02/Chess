@@ -1,6 +1,6 @@
 import pytest
 
-from src.controller.check_handling.move_validator_king_in_check import calculate_danger_line, get_attack_direction, \
+from src.controller.check_management.move_validator_king_in_check import calculate_danger_line, get_attack_direction, \
     get_horizontal_line, get_vertical_line, get_diagonal_line
 from src.model.chesspiece_types.king import King
 from src.model.chesspiece_types.queen import Queen

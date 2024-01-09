@@ -111,6 +111,7 @@ def give_player_threatened_fields(chessboard, current_player, other_player):
                     update_possible_moves(chessboard, alpha, numb, piece)
 
             current_player.coverage_areas[piece] = piece.possible_moves
+            piece.original_possible_moves = piece.possible_moves.copy()
 
     for piece in other_player.alive_pieces:
         if piece:
@@ -123,6 +124,7 @@ def give_player_threatened_fields(chessboard, current_player, other_player):
                     update_possible_moves(chessboard, alpha, numb, piece)
 
             other_player.coverage_areas[piece] = piece.possible_moves
+            piece.original_possible_moves = piece.possible_moves.copy()
 
 
 class PlayerSwitchObserver:
