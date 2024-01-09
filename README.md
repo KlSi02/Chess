@@ -6,12 +6,13 @@ Dieses Projekt umfasst die Entwicklung eines Schachspiels mit einer grafischen B
 Installation
 Um das Spiel zu installieren und auszuführen, folgen Sie diesen Schritten:
 
-Klonen Sie das Repository mit folgendem Befehl der Kommandozeile: git clone [URL des Repositories]
+Klonen Sie das Repository mit folgendem Befehl der Kommandozeile: git clone 
 Installieren der erforderlichen Abhängigkeiten: pip install -r requirements.txt
 Starten des Spiel: python src/main.py
 
-Benutzung
-Starten Sie das Spiel, indem Sie src/main.py ausführen. Die Benutzeroberfläche ist intuitiv gestaltet, sodass Sie sofort mit dem Spielen beginnen können.
+Benutzung:
+Starten Sie das Spiel, indem Sie src/main.py ausführen.
+Die Benutzeroberfläche ist intuitiv gestaltet, sodass Sie sofort mit dem Spielen beginnen können.
 
 Video-Demos
 "En Passant": https://youtu.be/BVqdUh11rbY
