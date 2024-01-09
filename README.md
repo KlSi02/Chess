@@ -1,6 +1,6 @@
 Schachspiel-Projekt
 
-Über das Projekt
+Über das Projekt:
 Dieses Projekt umfasst die Entwicklung eines Schachspiels mit einer grafischen Benutzeroberfläche, erstellt mit PyQt6. Es beinhaltet alle Standardregeln des Schachs, einschließlich spezieller Züge wie "En Passant", Rochade oder Bauernumwandlung. Meine Motivation hinter dem Projekt ist mein Interesse an Schach und die Herausforderung an mich selbst.
 
 Installation
@@ -23,4 +23,8 @@ Schachmatt: https://youtu.be/RQKowVYcOLI
 Patt: https://youtu.be/JTFmD9TCvxY
 Ein nachgespieltes Spiel: 
 
+## Dokumentation
+
+Weitere Informationen zur Architektur und zum Design des Projekts finden Sie in [UML-Diagrammen](docs/diagrams/PlantUML-File).
+Für eine umfassendere Beschreibung des Projekts, einschließlich Hintergrundinformationen und Entwicklungsdetails, siehe die [Projektbeschreibung](docs/Projektbeschreibung.md).
 
