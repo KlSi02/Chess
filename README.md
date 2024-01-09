@@ -6,7 +6,7 @@ Dieses Projekt umfasst die Entwicklung eines Schachspiels mit einer grafischen B
 Installation
 Um das Spiel zu installieren und auszuführen, folgen Sie diesen Schritten:
 
-Klonen Sie das Repository mit folgendem Befehl der Kommandozeile: git clone 
+Klonen Sie das Repository mit folgendem Befehl der Kommandozeile: git clone https://github.com/KlSi02/Chess
 Installieren der erforderlichen Abhängigkeiten: pip install -r requirements.txt
 Starten des Spiel: python src/main.py
 
