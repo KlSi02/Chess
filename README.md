@@ -7,7 +7,7 @@ Anleitung zum Herunterladen und Starten des Schachspiels:
 
 Schritt 1: Herunterladen des Projekts von GitHub
 
-Besuchen Sie die GitHub-Seite des Schachprojekts: 
+Besuchen Sie die GitHub-Seite des Schachprojekts: https://github.com/KlSi02/Chess
 Klicken Sie auf den grünen Button „Code“ oben rechts auf der Seite.
 Wählen Sie im Dropdown-Menü die Option „Download ZIP“.
 Speichern Sie die ZIP-Datei an einem gewünschten Ort auf Ihrem Computer.
@@ -39,6 +39,6 @@ Ein nachgespieltes Spiel: https://youtu.be/AgCLI_1ab5s?si=BPQo3nEsxdS3uKIV
 
 ## Dokumentation
 
-Weitere Informationen zur Architektur und zum Design des Projekts gibt es hier: [UML-Diagrammen](docs/diagrams/PlantUML-File).
+Weitere Informationen zur Architektur und zum Design des Projekts gibt es hier: [UML-Diagramm](docs/diagrams/PlantUML-File).
 Für eine umfassendere Beschreibung des Projekts: [Projektbeschreibung](docs/Projektbeschreibung.md).
 
