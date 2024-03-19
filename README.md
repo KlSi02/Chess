@@ -39,6 +39,6 @@ Ein nachgespieltes Spiel: https://youtu.be/AgCLI_1ab5s?si=BPQo3nEsxdS3uKIV
 
 ## Dokumentation
 
-Weitere Informationen zur Architektur und zum Design des Projekts gibt es hier: [UML-Diagramm](docs/diagrams/PlantUML-File).
-Für eine umfassendere Beschreibung des Projekts: [Projektbeschreibung](docs/Projektbeschreibung.md).
+Weitere Informationen zur Architektur und zum Design des Projekts gibt es hier: [UML-Diagramm](docs/classes_MyProject.plantuml).
+Für eine umfassendere Beschreibung des Projekts: [Projektbeschreibung](docs/project_description.md).
 
