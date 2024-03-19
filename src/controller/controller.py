@@ -282,3 +282,17 @@ class Controller:
                     return True
 
         return False
+
+"""
+def lotto_generator():
+    lotto_numbs = set()
+    while len(lotto_numbs) != 7:
+        import random
+        lotto_num = random.randrange(1, 49)
+        lotto_numbs.add(lotto_num)
+    return list(lotto_numbs)
+
+
+list_of_lotto_numbs = lotto_generator()
+list_of_lotto_numbs.sort(reverse=True)
+print(list_of_lotto_numbs)"""

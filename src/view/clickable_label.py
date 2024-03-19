@@ -62,8 +62,23 @@ class ClickableLabel(QLabel):
                 self.drag_start_position = event.position().toPoint()
                 ClickableLabel.original_svg_path = self.svg_path
                 ClickableLabel.current_drag_label = self
-            else:
-                return
+
+        if event.button() == Qt.MouseButton.LeftButton and self.pulsing_color == "green" and ClickableLabel.original_svg_path:
+            self.make_move_signal.emit(ClickableLabel.current_drag_label.objectName(), self.objectName())
+            ClickableLabel.current_drag_label.set_svg("")
+            self.set_svg(ClickableLabel.original_svg_path)
+
+        if self.is_pulsing and self.pulsing_color == "yellow":
+            self.castling_signal.emit(ClickableLabel.current_drag_label.objectName(), self.objectName())
+            ClickableLabel.current_drag_label.set_svg("")
+            self.set_svg(ClickableLabel.original_svg_path)
+
+        if self.is_pulsing and self.pulsing_color == "blue":
+            self.en_passant_signal.emit(ClickableLabel.current_drag_label.objectName(), self.objectName())
+            ClickableLabel.current_drag_label.set_svg("")
+            self.set_svg(ClickableLabel.original_svg_path)
+        else:
+            return
 
     def mouseMoveEvent(self, event):
         if not self.drag_start_position:
@@ -84,10 +99,9 @@ class ClickableLabel(QLabel):
 
         drag.setMimeData(mime_data)
 
-        # Erstellen Sie ein Pixmap von SVG
         svg_renderer = QSvgRenderer(self.svg_path)
-        preview_pixmap = QPixmap(50, 50)  # Größe der Vorschau
-        preview_pixmap.fill(Qt.GlobalColor.transparent)  # Transparenter Hintergrund
+        preview_pixmap = QPixmap(50, 50)
+        preview_pixmap.fill(Qt.GlobalColor.transparent)
         painter = QPainter(preview_pixmap)
         svg_renderer.render(painter)
         painter.end()
@@ -112,8 +126,7 @@ class ClickableLabel(QLabel):
                 ClickableLabel.current_drag_label.set_svg("")
 
                 svg_data = event.mimeData().data("image/svg+xml")
-                # Speichern der SVG-Daten in einer temporären Datei
-                # Sie könnten auch einen anderen Weg finden, um einen Pfad zu den SVG-Daten zu erhalten
+
                 with tempfile.NamedTemporaryFile(delete=False, suffix=".svg", mode="wb") as temp_file:
                     temp_file.write(svg_data)
                     temp_file_path = temp_file.name
@@ -124,8 +137,7 @@ class ClickableLabel(QLabel):
                 ClickableLabel.current_drag_label.set_svg("")
 
                 svg_data = event.mimeData().data("image/svg+xml")
-                # Speichern der SVG-Daten in einer temporären Datei
-                # Sie könnten auch einen anderen Weg finden, um einen Pfad zu den SVG-Daten zu erhalten
+
                 with tempfile.NamedTemporaryFile(delete=False, suffix=".svg", mode="wb") as temp_file:
                     temp_file.write(svg_data)
                     temp_file_path = temp_file.name
@@ -136,8 +148,7 @@ class ClickableLabel(QLabel):
                 ClickableLabel.current_drag_label.set_svg("")
 
                 svg_data = event.mimeData().data("image/svg+xml")
-                # Speichern der SVG-Daten in einer temporären Datei
-                # Sie könnten auch einen anderen Weg finden, um einen Pfad zu den SVG-Daten zu erhalten
+
                 with tempfile.NamedTemporaryFile(delete=False, suffix=".svg", mode="wb") as temp_file:
                     temp_file.write(svg_data)
                     temp_file_path = temp_file.name
@@ -181,7 +192,7 @@ class ClickableLabel(QLabel):
     def start_pulsing(self, start_color, end_color, duration=1500):
         if not self.is_pulsing:
             self.is_pulsing = True
-            # Setzen Sie die Farben für die Animation
+
             self.animation = QPropertyAnimation(self, b"color")
             self.animation.setDuration(duration)
             self.animation.setStartValue(start_color)
